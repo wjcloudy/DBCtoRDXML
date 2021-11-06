@@ -6,6 +6,7 @@ path = 'C:/file/to/file/'
 file = 'demo'
 extension = '.dbc'
 db = cantools.database.load_file(path + file + extension)
+messagecount = 0
 signalcount = 0
 outputfile = path + file +'-converted.xml'
 with open(outputfile, 'w') as f:
@@ -20,12 +21,17 @@ with open(outputfile, 'w') as f:
         frameheader = '<frame canId="' + str(hex(canmessage.frame_id)) + '" endianess="little">  <!--' + canmessage.name + '-->'
         f.write(frameheader)
         f.write('\n')      
-        
+        messagecount += 1
         for cansignal in canmessage.signals:
+            #print(cansignal.is_multiplexer)
+            #print(cansignal.multiplexer_signal)
+            #print(cansignal.choices)
             signalcount += 1
             rd_name = 'name="' + str(canmessage.name) + "_" + cansignal.name + '"'
             rd_bits = 'units="bit"'
             rd_comment = str(cansignal.comment)
+            rd_rangeMin = 'rangeMin="' + str(cansignal.minimum) + '"'
+            rd_rangeMax = 'rangeMax="' + str(cansignal.maximum) + '"'
             if cansignal.length == 1:
                 rd_offset = 'offset="' +str(cansignal.start // 8) +'"'
             else:
@@ -54,6 +60,12 @@ with open(outputfile, 'w') as f:
                     rd_conversion = 'conversion="V/10000"'
                 elif cansignal.scale == 0.00001:
                     rd_conversion = 'conversion="V/100000"'
+                elif cansignal.scale == 10:
+                    rd_conversion = 'conversion="V*10"'
+                elif cansignal.scale == 100:
+                    rd_conversion = 'conversion="V*100"'
+                elif cansignal.scale == 1000:
+                    rd_conversion = 'conversion="V*1000"'
             if cansignal.is_signed == 1:
                 rd_signed = 'signed="true"'
             else:
@@ -66,7 +78,7 @@ with open(outputfile, 'w') as f:
                 f.write(line)
                 f.write('\n')
             else: #byte(s) signal
-                line = "<value " + rd_name + " " + rd_offset + " " + rd_length + " " + rd_unit + " " + rd_endianness + " " + rd_signed + " " + rd_conversion + "></value><!--Comment=" + rd_comment + "-->"
+                line = "<value " + rd_name + " " + rd_offset + " " + rd_length + " " + rd_unit + " " + rd_endianness + " " + rd_signed + " "  + rd_rangeMin + " " + rd_rangeMax + " "+ rd_conversion + "></value><!--Comment=" + rd_comment + "-->"
                 f.write(line)
                 f.write('\n')
             
@@ -76,5 +88,5 @@ with open(outputfile, 'w') as f:
     f.write('\n')
     f.write("</RealDashCAN>")
     f.write('\n')
-print("Saved " + str(signalcount) + " signals to " + outputfile)
+print("Saved " + str(messagecount) + " messages (" +  str(signalcount) +" signals) to " + outputfile)
     #         # classcantools.database.can.Signal(name, start, length, byte_order='little_endian', is_signed=False, initial=None, scale=1, offset=0, minimum=None, maximum=None, unit=None, choices=None, dbc_specifics=None, comment=None, receivers=None, is_multiplexer=False, multiplexer_ids=None, multiplexer_signal=None, is_float=False, decimal=None)[source]
