@@ -1,14 +1,20 @@
 #DBC to RealDash XML Converter by wjcloudy
 
 import cantools
+import sys
+import argparse
 from pprint import pprint
-path = 'C:/file/to/file/'
-file = 'demo'
+parser = argparse.ArgumentParser("DBCtoRD-convert")
+parser.add_argument("path", help="The path for the DBC ie: c:/this/path/", type=str)
+parser.add_argument("filename", help="The filename (with no extension) for conversion", type=str)
+args = parser.parse_args()
 extension = '.dbc'
-db = cantools.database.load_file(path + file + extension)
+print("Converting file at: " + args.path + args.filename + extension)
+
+db = cantools.database.load_file(args.path + args.filename + extension)
 messagecount = 0
 signalcount = 0
-outputfile = path + file +'-converted.xml'
+outputfile = args.path + args.filename +'-converted.xml'
 with open(outputfile, 'w') as f:
     f.write('<?xml version="1.0" encoding="utf-8"?>')
     f.write('\n')
