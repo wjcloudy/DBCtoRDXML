@@ -1,4 +1,4 @@
-#DBC to RealDash XML Converter
+#DBC to RealDash XML Converter by wjcloudy
 
 import cantools
 from pprint import pprint
