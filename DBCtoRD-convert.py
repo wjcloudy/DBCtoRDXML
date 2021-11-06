@@ -38,11 +38,7 @@ with open(outputfile, 'w') as f:
             rd_comment = str(cansignal.comment)
             rd_rangeMin = 'rangeMin="' + str(cansignal.minimum) + '"'
             rd_rangeMax = 'rangeMax="' + str(cansignal.maximum) + '"'
-
-            if cansignal.length == 1:
-                rd_offset = 'offset="' +str(cansignal.start // 8) +'"'
-            else:
-                rd_offset = 'offset="' +str(cansignal.start // cansignal.length) + '"'
+            rd_offset = 'offset="' +str(cansignal.start // 8) +'"'
             if cansignal.byte_order == 'little_endian':
                 rd_endianness= 'endianess="little"'
             else:
