@@ -2,7 +2,7 @@
 
 import cantools
 from pprint import pprint
-path = 'C:/pathtodbc'
+path = 'C:/path/to/dbc/'
 file = 'dbcfilename-noextension'
 extension = '.dbc'
 db = cantools.database.load_file(path + file + extension)
