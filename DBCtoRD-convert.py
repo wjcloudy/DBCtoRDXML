@@ -20,11 +20,11 @@ with open(outputfile, 'w') as f:
     f.write('\n')
     f.write('<RealDashCAN>')
     f.write('\n')
-    f.write('<frames>')
+    f.write('\t<frames>')
     f.write('\n')
 
     for canmessage in db.messages:
-        frameheader = '<frame canId="' + str(hex(canmessage.frame_id)) + '" endianess="little">  <!--' + canmessage.name + '-->'
+        frameheader = '\t\t<frame canId="' + str(hex(canmessage.frame_id)) + '" endianess="little">  <!--' + canmessage.name + '-->'
         f.write(frameheader)
         f.write('\n')      
         messagecount += 1
@@ -71,17 +71,17 @@ with open(outputfile, 'w') as f:
             
             if cansignal.length == 1: #bit map signal
                 #check ok to do V>>0 
-                line = "<value " + rd_name + " " + rd_bits + " " + rd_offset + " " + rd_length + " " + rd_conversion + "></value><!--Comment=" + rd_comment + "-->"
+                line = "\t\t<value " + rd_name + " " + rd_bits + " " + rd_offset + " " + rd_length + " " + rd_conversion + "></value><!--Comment=" + rd_comment + "-->"
                 f.write(line)
                 f.write('\n')
             else: #byte(s) signal
-                line = "<value " + rd_name + " " + rd_offset + " " + rd_length + " " + rd_unit + " " + rd_endianness + " " + rd_signed + " "  + rd_rangeMin + " " + rd_rangeMax + " "+ rd_conversion + "></value><!--Comment=" + rd_comment + "-->"
+                line = "\t\t<value " + rd_name + " " + rd_offset + " " + rd_length + " " + rd_unit + " " + rd_endianness + " " + rd_signed + " "  + rd_rangeMin + " " + rd_rangeMax + " "+ rd_conversion + "></value><!--Comment=" + rd_comment + "-->"
                 f.write(line)
                 f.write('\n')
             
-        f.write("</frame>")
+        f.write("\t\t</frame>")
         f.write('\n')
-    f.write("</frames>")
+    f.write("\t</frames>")
     f.write('\n')
     f.write("</RealDashCAN>")
     f.write('\n')
