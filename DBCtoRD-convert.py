@@ -11,7 +11,7 @@ args = parser.parse_args()
 extension = '.dbc'
 print("Converting file at: " + args.path + args.filename + extension)
 
-db = cantools.database.load_file(args.path + args.filename + extension)
+db = cantools.database.load_file(args.path + args.filename + extension,strict=False)
 messagecount = 0
 signalcount = 0
 outputfile = args.path + args.filename +'-converted.xml'
