@@ -18,6 +18,8 @@ outputfile = args.path + args.filename +'-converted.xml'
 with open(outputfile, 'w') as f:
     f.write('<?xml version="1.0" encoding="utf-8"?>')
     f.write('\n')
+    f.write('<!-- File created by DBCtoRDXML Converter https://github.com/wjcloudy/DBCtoRDXML -->')
+    f.write('\n')
     f.write('<RealDashCAN>')
     f.write('\n')
     f.write('\t<frames>')
