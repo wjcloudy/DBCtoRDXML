@@ -6,12 +6,11 @@ import argparse
 from pprint import pprint
 parser = argparse.ArgumentParser("DBCtoRD-convert")
 parser.add_argument("path", help="The path for the DBC ie: c:/this/path/", type=str)
-parser.add_argument("filename", help="The filename (with no extension) for conversion", type=str)
+parser.add_argument("filename", help="The filename for conversion ie: demo.dbc", type=str)
 args = parser.parse_args()
-extension = '.dbc'
-print("Converting file at: " + args.path + args.filename + extension)
+print("Converting file at: " + args.path + args.filename)
 
-db = cantools.database.load_file(args.path + args.filename + extension,strict=False)
+db = cantools.database.load_file(args.path + args.filename,strict=False)
 messagecount = 0
 signalcount = 0
 outputfile = args.path + args.filename +'-converted.xml'
@@ -20,7 +19,7 @@ with open(outputfile, 'w') as f:
     f.write('\n')
     f.write('<!-- File created by DBCtoRDXML Converter https://github.com/wjcloudy/DBCtoRDXML -->')
     f.write('\n')
-    f.write('<RealDashCAN>')
+    f.write('<RealDashCAN version="2">')
     f.write('\n')
     f.write('\t<frames>')
     f.write('\n')
