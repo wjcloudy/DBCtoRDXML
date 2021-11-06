@@ -50,22 +50,10 @@ with open(outputfile, 'w') as f:
             else:
                 if  cansignal.scale == 1:
                     rd_conversion = 'conversion="V"'
-                elif cansignal.scale == 0.1:
-                    rd_conversion = 'conversion="V/10"'
-                elif cansignal.scale == 0.01:
-                    rd_conversion = 'conversion="V/100"'
-                elif cansignal.scale == 0.001:
-                    rd_conversion = 'conversion="V/1000"'
-                elif cansignal.scale == 0.0001:
-                    rd_conversion = 'conversion="V/10000"'
-                elif cansignal.scale == 0.00001:
-                    rd_conversion = 'conversion="V/100000"'
-                elif cansignal.scale == 10:
-                    rd_conversion = 'conversion="V*10"'
-                elif cansignal.scale == 100:
-                    rd_conversion = 'conversion="V*100"'
-                elif cansignal.scale == 1000:
-                    rd_conversion = 'conversion="V*1000"'
+                elif cansignal.scale < 1:
+                    rd_conversion = 'conversion="V/' + str(1/cansignal.scale) + '"'
+                elif cansignal.scale > 1:
+                    rd_conversion = 'conversion="V*' + str(cansignal.scale) +'"'
             if cansignal.is_signed == 1:
                 rd_signed = 'signed="true"'
             else:
