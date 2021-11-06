@@ -32,6 +32,7 @@ with open(outputfile, 'w') as f:
             rd_comment = str(cansignal.comment)
             rd_rangeMin = 'rangeMin="' + str(cansignal.minimum) + '"'
             rd_rangeMax = 'rangeMax="' + str(cansignal.maximum) + '"'
+
             if cansignal.length == 1:
                 rd_offset = 'offset="' +str(cansignal.start // 8) +'"'
             else:
@@ -45,15 +46,21 @@ with open(outputfile, 'w') as f:
             else:
                 rd_length =  'length="' + str(int(cansignal.length / 8)) + '"'
             rd_unit = 'units="' + str(cansignal.unit) + '"'
+            if cansignal.offset > 0:
+                rd_bias =  "+" + str(cansignal.offset)
+            elif cansignal.offset < 0:
+                rd_bias =  str(cansignal.offset)
+            else:
+                rd_bias = ""
             if cansignal.length ==1:
                 rd_conversion = 'conversion="V>>' + str(cansignal.start % 8) + '"'
             else:
                 if  cansignal.scale == 1:
-                    rd_conversion = 'conversion="V"'
+                    rd_conversion = 'conversion="V' +  rd_bias + '"'
                 elif cansignal.scale < 1:
-                    rd_conversion = 'conversion="V/' + str(1/cansignal.scale) + '"'
+                    rd_conversion = 'conversion="V/' + str(1/cansignal.scale) +  rd_bias + '"'
                 elif cansignal.scale > 1:
-                    rd_conversion = 'conversion="V*' + str(cansignal.scale) +'"'
+                    rd_conversion = 'conversion="V*' + str(cansignal.scale) +  rd_bias + '"'
             if cansignal.is_signed == 1:
                 rd_signed = 'signed="true"'
             else:
