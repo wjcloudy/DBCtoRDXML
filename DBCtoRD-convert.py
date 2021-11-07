@@ -30,16 +30,18 @@ with open(outputfile, 'w') as f:
         f.write('\n')      
         messagecount += 1
         for cansignal in canmessage.signals:
-            #print(cansignal.is_multiplexer)
-            #print(cansignal.multiplexer_signal)
-            #print(cansignal.choices)
+
             signalcount += 1
             rd_name = 'name="' + str(canmessage.name) + "_" + cansignal.name + '"'
+            rd_nameenum = 'name="' + str(canmessage.name) + "_" + cansignal.name + '_enum"'
             rd_bits = 'units="bit"'
             rd_comment = str(cansignal.comment)
             rd_rangeMin = 'rangeMin="' + str(cansignal.minimum) + '"'
             rd_rangeMax = 'rangeMax="' + str(cansignal.maximum) + '"'
-            rd_offset = 'offset="' +str(cansignal.start // 8) +'"'
+            rd_offset = 'offset="' +str(cansignal.start // 8) + '"'
+            rd_startbit = 'startbit="' + str(cansignal.start) + '"'
+            rd_bitcount = 'bitcount="' + str(cansignal.length) + '"'
+
             if cansignal.byte_order == 'little_endian':
                 rd_endianness= 'endianess="little"'
             else:
@@ -55,30 +57,38 @@ with open(outputfile, 'w') as f:
                 rd_bias =  str(cansignal.offset)
             else:
                 rd_bias = ""
-            if cansignal.length ==1:
-                rd_conversion = 'conversion="V>>' + str(cansignal.start % 8) + '"'
-            else:
-                if  cansignal.scale == 1:
-                    rd_conversion = 'conversion="V' +  rd_bias + '"'
-                elif cansignal.scale < 1:
-                    rd_conversion = 'conversion="V/' + str(1/cansignal.scale) +  rd_bias + '"'
-                elif cansignal.scale > 1:
-                    rd_conversion = 'conversion="V*' + str(cansignal.scale) +  rd_bias + '"'
+            if  cansignal.scale == 1:
+                rd_conversion = 'conversion="V' +  rd_bias + '"'
+            elif cansignal.scale < 1:
+                rd_conversion = 'conversion="V/' + str(1/cansignal.scale) +  rd_bias + '"'
+            elif cansignal.scale > 1:
+                rd_conversion = 'conversion="V*' + str(cansignal.scale) +  rd_bias + '"'
             if cansignal.is_signed == 1:
                 rd_signed = 'signed="true"'
             else:
-                rd_signed = 'signed="false"'
-
-            
+                rd_signed = 'signed="false"'    
+            if cansignal.choices is not None:
+                rd_enum = 'enum="'
+                for k in cansignal.choices:
+                    rd_enum = rd_enum + str(k) + ":" + str(cansignal.choices[k]) + ","
+                rd_enum = rd_enum + '#:err"'        
             if cansignal.length == 1: #bit map signal
                 #check ok to do V>>0 
-                line = "\t\t<value " + rd_name + " " + rd_bits + " " + rd_offset + " " + rd_length + " " + rd_conversion + "></value><!--Comment=" + rd_comment + "-->"
+                line = "\t\t\t<value " + rd_name + " " + rd_bits + " " + rd_startbit + " " + rd_bitcount + "></value><!--Comment=" + rd_comment + "-->"
                 f.write(line)
                 f.write('\n')
+                if cansignal.choices is not None: #Add text version of signal if lookup exists
+                    line = "\t\t\t<value " + rd_nameenum + " " + rd_bits + " " + rd_startbit + " " + rd_bitcount + " " + rd_enum + "></value><!--Comment=" + rd_comment + "-->"
+                    f.write(line)
+                    f.write('\n')
             else: #byte(s) signal
-                line = "\t\t<value " + rd_name + " " + rd_offset + " " + rd_length + " " + rd_unit + " " + rd_endianness + " " + rd_signed + " "  + rd_rangeMin + " " + rd_rangeMax + " "+ rd_conversion + "></value><!--Comment=" + rd_comment + "-->"
+                line = "\t\t\t<value " + rd_name + " " + rd_startbit + " " + rd_bitcount + " " + rd_unit + " " + rd_endianness + " " + rd_signed + " "  + rd_rangeMin + " " + rd_rangeMax + " "+ rd_conversion + "></value><!--Comment=" + rd_comment + "-->"
                 f.write(line)
                 f.write('\n')
+                if cansignal.choices is not None: #Add text version of signal if lookup exists
+                    line = "\t\t\t<value " + rd_nameenum + " " + rd_startbit + " " + rd_bitcount + " " + rd_unit + " " + rd_endianness + " " + rd_signed + " "  + rd_rangeMin + " " + rd_rangeMax + " "+ rd_conversion + " " + rd_enum + "></value><!--Comment=" + rd_comment + "-->"
+                    f.write(line)
+                    f.write('\n')
             
         f.write("\t\t</frame>")
         f.write('\n')
