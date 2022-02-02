@@ -41,7 +41,7 @@ with open(outputfile, 'w') as f:
             rd_offset = 'offset="' +str(cansignal.start // 8) + '"'
             rd_startbit = 'startbit="' + str(cansignal.start) + '"'
             rd_bitcount = 'bitcount="' + str(cansignal.length) + '"'
-
+            rd_conversion = "" #null out conversion value
             if cansignal.byte_order == 'little_endian':
                 rd_endianness= 'endianess="little"'
             else:
@@ -57,7 +57,7 @@ with open(outputfile, 'w') as f:
                 rd_bias =  str(cansignal.offset)
             else:
                 rd_bias = ""
-            if  cansignal.scale == 1:
+            if  cansignal.scale == 1 and cansignal.offset != 0:
                 rd_conversion = 'conversion="V' +  rd_bias + '"'
             elif cansignal.scale < 1:
                 rd_conversion = 'conversion="V/' + str(1/cansignal.scale) +  rd_bias + '"'
