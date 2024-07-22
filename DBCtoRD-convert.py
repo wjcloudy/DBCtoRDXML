@@ -1,19 +1,18 @@
 #DBC to RealDash XML Converter by wjcloudy
 
 import cantools
-import sys
-import argparse
-from pprint import pprint
-parser = argparse.ArgumentParser("DBCtoRD-convert")
-parser.add_argument("path", help="The path for the DBC ie: c:/this/path/", type=str)
-parser.add_argument("filename", help="The filename for conversion ie: demo.dbc", type=str)
-args = parser.parse_args()
-print("Converting file at: " + args.path + args.filename)
+from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import asksaveasfilename
 
-db = cantools.database.load_file(args.path + args.filename,strict=False)
+dbcfilename = askopenfilename(title = "Select file",filetypes = (("DBC Files","*.dbc"),("all files","*.*"))) 
+outputfile = asksaveasfilename(filetypes = (("XML Files","*.xml"),("all files","*.*")))
+if outputfile[:4] != ".xml":
+    outputfile = outputfile = ".xml"
+print("Converting file at: "+  dbcfilename)
+
+db = cantools.database.load_file(dbcfilename)
 messagecount = 0
 signalcount = 0
-outputfile = args.path + args.filename +'-converted.xml'
 with open(outputfile, 'w') as f:
     f.write('<?xml version="1.0" encoding="utf-8"?>')
     f.write('\n')
