@@ -7,7 +7,7 @@ from tkinter.filedialog import asksaveasfilename
 dbcfilename = askopenfilename(title = "Select file",filetypes = (("DBC Files","*.dbc"),("all files","*.*"))) 
 outputfile = asksaveasfilename(filetypes = (("XML Files","*.xml"),("all files","*.*")))
 if outputfile[:4] != ".xml":
-    outputfile = outputfile = ".xml"
+    outputfile = outputfile + ".xml"
 print("Converting file at: "+  dbcfilename)
 
 db = cantools.database.load_file(dbcfilename)
